@@ -1,0 +1,8 @@
+{
+  "name": "pocket-diff",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "author": "Kamil Pajdzik",
+  "license": "MIT",
+  "private": true
+}
