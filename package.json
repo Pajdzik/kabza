@@ -1,0 +1,9 @@
+{
+  "name": "kabza",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/Pajdzik/kabza.git",
+  "author": "Kamil Pajdzik <kamil@pajdzik.pl>",
+  "license": "MIT",
+  "private": true
+}
