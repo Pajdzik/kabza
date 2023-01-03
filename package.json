@@ -6,5 +6,5 @@
   "author": "Kamil Pajdzik <kamil@pajdzik.pl>",
   "license": "MIT",
   "private": true,
-  "workspaces": ["pocket-diff"]
+  "workspaces": ["kabza-cf-worker", "pocket-diff"]
 }
