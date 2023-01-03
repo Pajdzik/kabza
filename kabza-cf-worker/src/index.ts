@@ -1,3 +1,5 @@
+import { getAccessToken, getData, obtainRequestToken } from "pocket-diff";
+
 /**
  * Welcome to Cloudflare Workers! This is your first scheduled worker.
  *
@@ -10,23 +12,77 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
+declare const POCKET_CONSUMER_KEY: string;
+
 export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
+  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
+  kabzaStore: KVNamespace;
 }
 
+const handlePocketCallback = async (
+  request: Request,
+  env: Env
+): Promise<Response> => {
+  const code = await env.kabzaStore.get("pocketcode");
+  const { accessToken, username } = await getAccessToken(
+    POCKET_CONSUMER_KEY,
+    code
+  );
+  await env.kabzaStore.put("pocketaccesstoken", accessToken);
+
+  return new Response("Great success");
+};
+
+const handleInitialize = async (
+  request: Request,
+  env: Env
+): Promise<Response> => {
+  const ngrok = "https://b2a2-50-47-214-25.ngrok.io/pocketcallback";
+  const code = await obtainRequestToken(POCKET_CONSUMER_KEY, ngrok);
+  await env.kabzaStore.put("pocketcode", code);
+
+  const hyperlink = `<a href="https://getpocket.com/auth/authorize?request_token=${code}&redirect_uri=${ngrok}">Authorize Pocket</a>`;
+  const html = `<!DOCTYPE html>
+                <body>
+                  ${hyperlink}
+                </body>`;
+
+  return new Response(html, {
+    headers: {
+      "content-type": "text/html;charset=UTF-8",
+    },
+  });
+};
+
+const handleFetchRequest = async (
+  request: Request,
+  env: Env
+): Promise<Response> => {
+  const url = new URL(request.url);
+
+  if (url.pathname === "/pocketcallback") {
+    return handlePocketCallback(request, env);
+  } else {
+    const pocketAccessToken = await env.kabzaStore.get("pocketaccesstoken");
+    if (pocketAccessToken) {
+      const c = await getData(POCKET_CONSUMER_KEY, pocketAccessToken);
+      return new Response("Hello world " + JSON.stringify(c));
+    } else {
+      return handleInitialize(request, env);
+    }
+  }
+};
+
 export default {
-	async scheduled(
-		controller: ScheduledController,
-		env: Env,
-		ctx: ExecutionContext
-	): Promise<void> {
-		console.log(`Hello World!`);
-	},
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<void> {
+    console.log(`Hello World!`);
+  },
+
+  async fetch(request: Request, env: Env) {
+    return handleFetchRequest(request, env);
+  },
 };
