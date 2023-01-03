@@ -7,8 +7,7 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "kabza-cf-worker",
-    "pocket-diff"
+    "packages/*"
   ],
   "devDependencies": {
     "eslint": "^8.31.0",
