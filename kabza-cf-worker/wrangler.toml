@@ -1,6 +1,11 @@
 name = "kabza-cf-worker"
-main = "src/index.ts"
+main = "bundle.js"
 compatibility_date = "2022-12-28"
+
+[[kv_namespaces]]
+binding = "kabzaStore"
+id = "20d84aa0235a4e389f91cba8180da57b"
+preview_id = "555ff7bac49f4a06a092a25c281e5a25" 
 
 [triggers]
 crons = [ "1 * * * *" ]
