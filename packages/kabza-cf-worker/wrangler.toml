@@ -1,4 +1,4 @@
-name = "kabza-cf-worker"
+name = "kabza"
 main = "bundle.js"
 compatibility_date = "2022-12-28"
 

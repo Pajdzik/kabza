@@ -12,7 +12,8 @@
     "deploy": "wrangler publish"
   },
   "dependencies": {
-    "pocket-diff": "0.0.1"
+    "loglevel": "^1.8.1",
+    "pocket-fetch": "0.0.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",
