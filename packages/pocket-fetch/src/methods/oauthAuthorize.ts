@@ -19,3 +19,9 @@ export const retrieveAccessToken = async (
 
   return response;
 };
+
+export const constructRedirectUri = (
+  requestToken: string,
+  callbackUri: string
+) =>
+  `https://getpocket.com/auth/authorize?request_token=${requestToken}&redirect_uri=${callbackUri}`;
