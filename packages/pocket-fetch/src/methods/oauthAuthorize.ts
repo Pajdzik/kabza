@@ -1,5 +1,5 @@
-import { sendRequest } from "../http";
-import { ConsumerKeyProps, RequestTokenProps } from "../pocket";
+import { sendRequest } from "../http.js";
+import { ConsumerKeyProps, RequestTokenProps } from "../pocket.js";
 
 export type RetrieveAccessTokenProps = ConsumerKeyProps & RequestTokenProps;
 
